@@ -1,0 +1,27 @@
+version: '3.11'
+services:
+  mqtt:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+    environment:
+      - MOSQUITTO_HOST=34.143.151.66
+      - MOSQUITTO_PORT=1883
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  fastapi:
+    build: ./app/
+    ports:
+      - "80:80"
+    environment:
+      - MQTT_HOST=34.143.151.66
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=guy/test
+      - MONGO_URL=mongodb://mongodb:27017
+    depends_on:
+      - mqtt
+      - mongodb
